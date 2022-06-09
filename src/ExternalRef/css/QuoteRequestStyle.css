@@ -1,0 +1,49 @@
+#adminFormRequest .ms-Grid-row
+{
+    padding: 10px;
+}
+
+#adminFormRequest .txtClass
+{
+    color:black;
+    margin-left: 10px;  
+}
+
+#adminFormRequest .showloaderclass
+{
+    position: absolute;
+    margin-top: 250px;
+    margin-left: 290px;
+}
+
+.rowColor
+{
+    background-color: #ffffff;
+}
+/*-----------------------------------------------------------------------------------*/
+.txtClassHead{
+    color: red;
+}
+.txtClassArrow{
+    height: 25px;
+    width: 25px;
+    border-radius: 50%;
+    background-color: red;
+}
+.txtClassArrowIcon{
+    text-align: center;
+    color: white;
+    font-weight: bold;
+}
+.txtClass{
+    font-size: 14px;
+    font-weight:500;
+}
+.txtclassSubmitBtn{
+    background-color: red;
+    border: none;
+}
+.txtClassSubmitbtn:hover{
+    background-color: rgba(255, 0, 0, 0.753);
+    border: none;
+}

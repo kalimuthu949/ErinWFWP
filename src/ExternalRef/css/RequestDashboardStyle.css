@@ -1,0 +1,150 @@
+/* !Workbench */
+#workbenchPageContent {
+    max-width: 100%;
+    border-radius: 10px;
+  }
+  .RequestQuote{
+    display: flex;
+    
+  }
+  .RequestQuoteAdmin,
+  .RequestQuoteRetail{
+    background-color: rgb(223, 30, 30);
+    border: none;
+    border-radius: 4px;
+    margin-left: 10px;
+  }
+  .RequestQuoteAdmin:hover,
+  .RequestQuoteRetail:hover{
+    background-color:rgba(223, 30, 30, 0.75);
+    color:white;
+    text-shadow:none;
+    border: none;
+  }
+  .SearchBar{
+    display: flex;
+  }
+  .SearchBox{
+  border: 0;
+  background-color: #d8d8e2;
+  border-radius: 4px;
+  margin-right: 10px;
+  font-size: 12px;
+  opacity: 0.5;
+  width: 225px;
+  outline: 0;
+  }
+ 
+  .SearchBox:hover{
+    border: none;
+  }
+  .SearchIcon{
+    display: none;
+    /* color: white;
+    background-color: rgb(223, 30, 30);
+    border: none;
+    margin-right: 10px;
+    border-radius: 4px; */
+  }
+  /* .SearchIcon:hover{
+    background-color:rgba(223, 30, 30, 0.75);
+    color:white;
+    text-shadow:none;
+    border: none;
+  } */
+  .RequestQuoteAndSearchBox{
+    display: flex;
+    justify-content: space-between;
+  }
+.DialogBtn{
+  display: flex; 
+}
+.QuoteIcon,.AddGroup{
+  color: rgb(223, 30, 30);
+}
+.QuoteIcon:hover,.AddGroup:hover{
+  color: rgba(223, 30, 30, 0.75);
+}
+.Pagination{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+/* .root-199{
+  font-size: 14px;
+  font-weight: 400;
+  box-sizing: border-box;
+  display: inline-block;
+  text-decoration: none;
+  text-align: center;
+  cursor: pointer;
+  vertical-align: top;
+  padding: 0px 5px;
+  border-radius: 10px;
+  min-width: 40px;
+  height: 32px;
+  color: rgb(223, 30, 30);
+  user-select: none;
+  border: none;
+  margin: auto 1px;
+  background-color:#f7f7f7 ;
+}
+.root-199:hover{
+  background-color:rgba(255, 255, 255, 0.75);
+  color: rgb(223, 30, 30);
+  border: 1px solid #d8d8e2;
+}
+
+.root-210{
+  font-size: 14px;
+  font-weight: 400;
+  box-sizing: border-box;
+  display: inline-block;
+  text-decoration: none;
+  text-align: center;
+  cursor: pointer;
+  vertical-align: top;
+  padding: 0px 5px;
+  border-radius: 10px;
+  min-width: 40px;
+  height: 32px;
+  border: none;
+  color: white;
+  background-color:rgb(223, 30, 30) ;
+  user-select: none;
+}
+.root-210:hover{
+  color: rgb(223, 30, 30);
+  background-color: white;
+  border: 1px solid rgb(223, 30, 30);
+} */
+.AddTo{
+  color: rgb(21, 175, 202);
+}
+.ErrorBadge{
+color: rgba(223, 30, 30, 0.75);
+}
+.Savebtn{
+  color: white;
+  background-color: rgb(223, 30, 30);
+  border: 1px solid rgb(223, 30, 30);
+  margin-top: 20px;
+  height: 25px;
+}
+.Cancelbtn{
+  color: rgb(223, 30, 30);
+  background-color: white;
+  border:1px solid rgb(223, 30, 30);
+  margin-top: 20px;
+  height: 25px;
+}
+.Savebtn:hover{
+  background-color: rgba(223, 30, 30, 0.75);
+  border: 1px solid  rgba(223, 30, 30, 0.75);;
+}
+.Cancelbtn:hover{
+  border:1px solid rgb(223, 30, 30,0.75);
+  color: rgb(223, 30, 30 );
+  background-color: rgba(255, 255, 255, 0.75);
+}

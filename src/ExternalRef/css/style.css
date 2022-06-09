@@ -1,0 +1,20 @@
+
+#workbenchPageContent {
+  max-width: 100%;
+}
+
+/* .ControlZone--emphasisBackground,
+.CanvasZoneContainer {
+  background-color: transparent !important;
+} */
+
+.content_3f3fd3c2,
+.CanvasZone {
+  padding: 0 !important;
+  max-width: 100% !important;
+}
+.pagination{
+  display: flex;
+  justify-content: center;
+  margin: 1rem;
+}
