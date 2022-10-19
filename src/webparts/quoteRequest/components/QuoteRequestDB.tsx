@@ -1,206 +1,203 @@
-import * as React from "react";
-import { useState, useCallback, useRef, useEffect } from "react";
+import * as React from 'react'
+import { useState, useCallback, useRef, useEffect } from 'react'
 import {
   BaseClientSideWebPart,
   WebPartContext,
-} from "@microsoft/sp-webpart-base";
-import { IQuoteRequestProps } from "./IQuoteRequestProps";
-import { FontSizes } from "@fluentui/theme";
-import { TextField } from "office-ui-fabric-react/lib/TextField";
-import { Separator } from "office-ui-fabric-react/lib/Separator";
-import { Text } from "office-ui-fabric-react/lib/Text";
-import {
-  DefaultButton,
-  PrimaryButton,
-} from "office-ui-fabric-react/lib/Button";
-import { Spinner, SpinnerSize } from "office-ui-fabric-react/lib/Spinner";
+} from '@microsoft/sp-webpart-base'
+import { IQuoteRequestProps } from './IQuoteRequestProps'
+import { FontSizes } from '@fluentui/theme'
+import { TextField } from 'office-ui-fabric-react/lib/TextField'
+import { Separator } from 'office-ui-fabric-react/lib/Separator'
+import { Text } from 'office-ui-fabric-react/lib/Text'
+import { DefaultButton, PrimaryButton } from 'office-ui-fabric-react/lib/Button'
+import { Spinner, SpinnerSize } from 'office-ui-fabric-react/lib/Spinner'
 import {
   Dialog,
   DialogType,
   DialogFooter,
-} from "office-ui-fabric-react/lib/Dialog";
-import { Icon, loadTheme, createTheme } from "@fluentui/react";
+} from 'office-ui-fabric-react/lib/Dialog'
+import { Icon, loadTheme, createTheme } from '@fluentui/react'
 
-
-var alertify: any = require("../../../ExternalRef/js/alertify.min.js");
-var html2pdf:any=require("../../../ExternalRef/js/html2pdf.bundle.min.js");
+var alertify: any = require('../../../ExternalRef/js/alertify.min.js')
+var html2pdf: any = require('../../../ExternalRef/js/html2pdf.bundle.min.js')
 import {
   PeoplePicker,
   PrincipalType,
-} from "@pnp/spfx-controls-react/lib/PeoplePicker";
-import * as $ from "jquery";
-import { Label } from "@microsoft/office-ui-fabric-react-bundle";
-import { Hidden } from "@material-ui/core";
-import { UrlQueryParameterCollection } from "@microsoft/sp-core-library";
+} from '@pnp/spfx-controls-react/lib/PeoplePicker'
+import * as $ from 'jquery'
+import { Label } from '@microsoft/office-ui-fabric-react-bundle'
+import { Hidden } from '@material-ui/core'
+import { UrlQueryParameterCollection } from '@microsoft/sp-core-library'
 
 //import 'office-ui-fabric-react/dist/css/fabric.css';
 //import "../../../ExternalRef/css/style.css";
 // import '../../../ExternalRef/css/QuoteRequestStyle.css';
 //import  styles from "../components/QuoteRequest.module.scss";
 
-import {PeoplesData} from "./PeoplesData";
+import { PeoplesData } from './PeoplesData'
 
-let getSelectedUsers: number[] = [];
-let NextOrderID: string = "";
-let Category: String = "";
+let getSelectedUsers: number[] = []
+let NextOrderID: string = ''
+let Category: String = ''
 const dialogContentProps = {
   type: DialogType.normal,
-  title: "Form Submitted Successfully",
-};
-var FormFilled: boolean = false;
-interface formvalues {
-  DeviceCount: string;
-  OrderNo: string;
-  Category: string;
-  PointCount: string;
-  Drivers: string;
-  SpecialConsiderations: string;
-  BEName: string;
-  BENumber: string;
-  ManagerName: string;
-  ManagerPhoneNumber: string;
-  ManagerEmail: string;
-  VendorManagerName: string;
-  VendorManagerPhoneNumber: string;
-  VendorManagerEmail: string;
-  ShippingCountName: string;
-  ShippingAddress: string;
-  AdditionalInformation: string;
-  Description: string;
-  UserDetailsId: string | Number[] | any;
+  title: 'Form Submitted Successfully',
 }
-const formRowStyles = { display: "flex", width: "100%",marginTop:"0.5rem" };
-const formColStyles = { width: "23%", padding: "0rem 1rem" };
+var FormFilled: boolean = false
+interface formvalues {
+  DeviceCount: string
+  OrderNo: string
+  Category: string
+  PointCount: string
+  Drivers: string
+  SpecialConsiderations: string
+  BEName: string
+  BENumber: string
+  ManagerName: string
+  ManagerPhoneNumber: string
+  ManagerEmail: string
+  VendorManagerName: string
+  VendorManagerPhoneNumber: string
+  VendorManagerEmail: string
+  ShippingCountName: string
+  ShippingAddress: string
+  AdditionalInformation: string
+  Description: string
+  UserDetailsId: string | Number[] | any
+}
+const [message, setMessage] = useState('')
+const formRowStyles = { display: 'flex', width: '100%', marginTop: '0.5rem' }
+const formColStyles = { width: '23%', padding: '0rem 1rem' }
 function RequestNewQuoteAdmin(
-  props: IQuoteRequestProps
+  props: IQuoteRequestProps,
 ): React.ReactElement<[]> {
   const wellsFargoTheme = createTheme({
     palette: {
-      themePrimary: "#d71e2b",
-      themeLighterAlt: "#fdf5f5",
-      themeLighter: "#f8d6d9",
-      themeLight: "#f3b4b8",
-      themeTertiary: "#e77078",
-      themeSecondary: "#db3540",
-      themeDarkAlt: "#c11b26",
-      themeDark: "#a31720",
-      themeDarker: "#781118",
-      neutralLighterAlt: "#faf9f8",
-      neutralLighter: "#f3f2f1",
-      neutralLight: "#edebe9",
-      neutralQuaternaryAlt: "#e1dfdd",
-      neutralQuaternary: "#d0d0d0",
-      neutralTertiaryAlt: "#c8c6c4",
-      neutralTertiary: "#a19f9d",
-      neutralSecondary: "#605e5c",
-      neutralPrimaryAlt: "#3b3a39",
-      neutralPrimary: "#323130",
-      neutralDark: "#201f1e",
-      black: "#000000",
-      white: "#ffffff",
+      themePrimary: '#d71e2b',
+      themeLighterAlt: '#fdf5f5',
+      themeLighter: '#f8d6d9',
+      themeLight: '#f3b4b8',
+      themeTertiary: '#e77078',
+      themeSecondary: '#db3540',
+      themeDarkAlt: '#c11b26',
+      themeDark: '#a31720',
+      themeDarker: '#781118',
+      neutralLighterAlt: '#faf9f8',
+      neutralLighter: '#f3f2f1',
+      neutralLight: '#edebe9',
+      neutralQuaternaryAlt: '#e1dfdd',
+      neutralQuaternary: '#d0d0d0',
+      neutralTertiaryAlt: '#c8c6c4',
+      neutralTertiary: '#a19f9d',
+      neutralSecondary: '#605e5c',
+      neutralPrimaryAlt: '#3b3a39',
+      neutralPrimary: '#323130',
+      neutralDark: '#201f1e',
+      black: '#000000',
+      white: '#ffffff',
     },
-  });
-  loadTheme(wellsFargoTheme);
-  let siteURL = props.context.pageContext.web.absoluteUrl;
+  })
+  loadTheme(wellsFargoTheme)
+  let siteURL = props.context.pageContext.web.absoluteUrl
 
   const intialvalues: formvalues[] = [
     {
-      DeviceCount: "",
-      OrderNo: "",
-      Category: "",
-      PointCount: "",
-      Drivers: "",
-      SpecialConsiderations: "",
-      BEName: "",
-      BENumber: "",
-      ManagerName: "",
-      ManagerPhoneNumber: "",
-      ManagerEmail: "",
-      VendorManagerName: "",
-      VendorManagerPhoneNumber: "",
-      VendorManagerEmail: "",
-      ShippingCountName: "",
-      ShippingAddress: "",
-      AdditionalInformation: "",
-      Description: "",
-      UserDetailsId: "",
+      DeviceCount: '',
+      OrderNo: '',
+      Category: '',
+      PointCount: '',
+      Drivers: '',
+      SpecialConsiderations: '',
+      BEName: '',
+      BENumber: '',
+      ManagerName: '',
+      ManagerPhoneNumber: '',
+      ManagerEmail: '',
+      VendorManagerName: '',
+      VendorManagerPhoneNumber: '',
+      VendorManagerEmail: '',
+      ShippingCountName: '',
+      ShippingAddress: '',
+      AdditionalInformation: '',
+      Description: '',
+      UserDetailsId: '',
     },
-  ];
+  ]
 
   const intialvalidations: formvalues[] = [
     {
-      DeviceCount: "",
-      OrderNo: "",
-      Category: "",
-      PointCount: "",
-      Drivers: "",
-      SpecialConsiderations: "",
-      BEName: "",
-      BENumber: "",
-      ManagerName: "",
-      ManagerPhoneNumber: "",
-      ManagerEmail: "",
-      VendorManagerName: "",
-      VendorManagerPhoneNumber: "",
-      VendorManagerEmail: "",
-      ShippingCountName: "",
-      ShippingAddress: "",
-      AdditionalInformation: "",
-      Description: "",
-      UserDetailsId: "",
+      DeviceCount: '',
+      OrderNo: '',
+      Category: '',
+      PointCount: '',
+      Drivers: '',
+      SpecialConsiderations: '',
+      BEName: '',
+      BENumber: '',
+      ManagerName: '',
+      ManagerPhoneNumber: '',
+      ManagerEmail: '',
+      VendorManagerName: '',
+      VendorManagerPhoneNumber: '',
+      VendorManagerEmail: '',
+      ShippingCountName: '',
+      ShippingAddress: '',
+      AdditionalInformation: '',
+      Description: '',
+      UserDetailsId: '',
     },
-  ];
+  ]
 
   //const arrVlidations:formvalues[]=intialvalidations;
 
   //const arrValues:formvalues[]=intialvaluestemp;
 
-  const [Column, setColumn] = useState(true);
-  const [Hidedialog, setHidedialog] = useState(true);
+  const [Column, setColumn] = useState(true)
+  const [Hidedialog, setHidedialog] = useState(true)
   ///const[FormFilled,setFormFilled]=useState(false);
 
   //const[Validation,setValidation]=useState(arrVlidations);
   //const[Submitvalues,setSubmitvalues]=useState(arrValues);
 
   const [Validation, setValidation] = useState<formvalues[] | undefined>(
-    intialvalidations
-  );
+    intialvalidations,
+  )
   const [Submitvalues, setSubmitvalues] = useState<formvalues[] | undefined>(
-    intialvalues
-  );
-  const [Selectedpeoples,setSelectedpeoples]=useState([]);
-  const [Groups, setGroups] = useState("");
+    intialvalues,
+  )
+  const [Selectedpeoples, setSelectedpeoples] = useState([])
+  const [Groups, setGroups] = useState('')
 
   useEffect(() => {
-    getLastID();
-    setGroups("LynxSpring Members");
-    var queryParms = new UrlQueryParameterCollection(window.location.href);
-    var myParm = queryParms.getValue("Category");
+    getLastID()
+    setGroups('LynxSpring Members')
+    var queryParms = new UrlQueryParameterCollection(window.location.href)
+    var myParm = queryParms.getValue('Category')
     if (myParm) {
-      if (myParm.toLowerCase() == "admin") Category = "Admin";
-      else Category = "Retail";
+      if (myParm.toLowerCase() == 'admin') Category = 'Admin'
+      else Category = 'Retail'
     } else {
-      location.href = siteURL + "/SitePages/WFRequestDashboard.aspx";
+      location.href = siteURL + '/SitePages/WFRequestDashboard.aspx'
     }
     setTimeout(() => {
-      setColumn(false);
-    }, 2000);
-  }, []);
+      setColumn(false)
+    }, 2000)
+  }, [])
 
   return (
     <div>
-      <div id="adminFormRequest" style={{margin:"1rem 2rem"}}>
+      <div id="adminFormRequest" style={{ margin: '1rem 2rem' }}>
         {Column && (
           <Spinner
             label="Loading items..."
             size={SpinnerSize.large}
             style={{
-              width: "100vw",
-              height: "100vh",
-              position: "fixed",
+              width: '100vw',
+              height: '100vh',
+              position: 'fixed',
               top: 0,
               left: 0,
-              backgroundColor: "#fff",
+              backgroundColor: '#fff',
               zIndex: 10000,
             }}
           />
@@ -208,37 +205,37 @@ function RequestNewQuoteAdmin(
         <div className="ms-Grid">
           <div style={formRowStyles}>
             <div>
-              <div className={"txtClassArrow"}>
+              <div className={'txtClassArrow'}>
                 <Icon
                   iconName="NavigateBack"
                   onClick={DialogBox}
                   styles={{
                     root: {
                       color: wellsFargoTheme.palette.themePrimary,
-                      fontSize: "2rem",
-                      cursor: "pointer",
+                      fontSize: '2rem',
+                      cursor: 'pointer',
                     },
                   }}
                 />
               </div>
             </div>
-            <div style={{ margin: "auto" }}>
+            <div style={{ margin: 'auto' }}>
               <Text
-                variant={"xLarge"}
-                className={"txtClassHead"}
+                variant={'xLarge'}
+                className={'txtClassHead'}
                 styles={{
                   root: {
                     color: wellsFargoTheme.palette.themePrimary,
-                    fontWeight: "bold",
-                    fontSize: "1.5rem",
-                    textAlign: "center",
-                    width: "100%",
+                    fontWeight: 'bold',
+                    fontSize: '1.5rem',
+                    textAlign: 'center',
+                    width: '100%',
                   },
                 }}
               >
-                {Category == "Admin"
-                  ? "Admin Form Request"
-                  : "Retail Form Request"}
+                {Category == 'Admin'
+                  ? 'Admin Form Request'
+                  : 'Retail Form Request'}
               </Text>
             </div>
           </div>
@@ -246,10 +243,10 @@ function RequestNewQuoteAdmin(
           <div style={formRowStyles}>
             <div style={formColStyles}>
               <TextField
-                styles={{ root: { width: "100%" } }}
+                styles={{ root: { width: '100%' } }}
                 label="Device count"
                 id="txtDeviceCount"
-                name={"DeviceCount"}
+                name={'DeviceCount'}
                 onChange={(e) => handlechange(e)}
                 required
                 errorMessage={Validation[0].DeviceCount}
@@ -260,7 +257,7 @@ function RequestNewQuoteAdmin(
                 <TextField
                   label="Point count"
                   id="txtPointCount"
-                  name={"PointCount"}
+                  name={'PointCount'}
                   onChange={(e) => handlechange(e)}
                   required
                   errorMessage={Validation[0].PointCount}
@@ -271,7 +268,7 @@ function RequestNewQuoteAdmin(
               <TextField
                 label="Drivers"
                 id="txtDrivers"
-                name={"Drivers"}
+                name={'Drivers'}
                 onChange={(e) => handlechange(e)}
                 required
                 errorMessage={Validation[0].Drivers}
@@ -281,7 +278,7 @@ function RequestNewQuoteAdmin(
               <TextField
                 label="Site Name"
                 id="txtBEName"
-                name={"BEName"}
+                name={'BEName'}
                 onChange={(e) => handlechange(e)}
                 required
                 errorMessage={Validation[0].BEName}
@@ -293,7 +290,7 @@ function RequestNewQuoteAdmin(
               <TextField
                 label="BE Number"
                 id="txtBENumber"
-                name={"BENumber"}
+                name={'BENumber'}
                 onChange={(e) => handlechange(e)}
                 required
                 errorMessage={Validation[0].BENumber}
@@ -306,7 +303,7 @@ function RequestNewQuoteAdmin(
                 autoAdjustHeight
                 label="Special Considerations"
                 id="txtSpecialConsiderations"
-                name={"SpecialConsiderations"}
+                name={'SpecialConsiderations'}
                 onChange={(e) => handlechange(e)}
                 required
                 errorMessage={Validation[0].SpecialConsiderations}
@@ -315,7 +312,11 @@ function RequestNewQuoteAdmin(
           </div>
           <div style={formRowStyles}>
             <div style={formColStyles}>
-              <Text variant={"xLarge"} className={"txtClassHead"} style={{marginTop:"0.5rem"}}>
+              <Text
+                variant={'xLarge'}
+                className={'txtClassHead'}
+                style={{ marginTop: '0.5rem' }}
+              >
                 Project Manager Details:
               </Text>
             </div>
@@ -325,7 +326,7 @@ function RequestNewQuoteAdmin(
               <TextField
                 label="Name"
                 id="txtManagerName"
-                name={"ManagerName"}
+                name={'ManagerName'}
                 onChange={(e) => handlechange(e)}
                 required
                 errorMessage={Validation[0].ManagerName}
@@ -335,7 +336,7 @@ function RequestNewQuoteAdmin(
               <TextField
                 label="Email - ID"
                 id="txtManagerEmailID"
-                name={"ManagerEmail"}
+                name={'ManagerEmail'}
                 onChange={(e) => handlechange(e)}
                 required
                 errorMessage={Validation[0].ManagerEmail}
@@ -345,19 +346,17 @@ function RequestNewQuoteAdmin(
               <TextField
                 label="Phone Number"
                 id="txtManagerPhoneNumber"
-                name={"ManagerPhoneNumber"}
+                name={'ManagerPhoneNumber'}
                 onChange={(e) => handlechange(e)}
                 required
                 errorMessage={Validation[0].ManagerPhoneNumber}
               ></TextField>
             </div>
           </div>
-          <div style={formRowStyles}>
-            
-          </div>
+          <div style={formRowStyles}></div>
           <div style={formRowStyles}>
             <div style={formColStyles}>
-              <Text variant={"xLarge"} className={"txtClassHead"}>
+              <Text variant={'xLarge'} className={'txtClassHead'}>
                 Vendor Manager Details:
               </Text>
             </div>
@@ -368,7 +367,7 @@ function RequestNewQuoteAdmin(
               <TextField
                 label="Name"
                 id="txtVendorManagerName"
-                name={"VendorManagerName"}
+                name={'VendorManagerName'}
                 onChange={(e) => handlechange(e)}
                 required
                 errorMessage={Validation[0].VendorManagerName}
@@ -378,7 +377,7 @@ function RequestNewQuoteAdmin(
               <TextField
                 label="Email - ID"
                 id="txtVendorManagerEmailID"
-                name={"VendorManagerEmail"}
+                name={'VendorManagerEmail'}
                 onChange={(e) => handlechange(e)}
                 required
                 errorMessage={Validation[0].VendorManagerEmail}
@@ -388,19 +387,21 @@ function RequestNewQuoteAdmin(
               <TextField
                 label="Phone Number"
                 id="txtVendorManagerPhoneNumber"
-                name={"VendorManagerPhoneNumber"}
+                name={'VendorManagerPhoneNumber'}
                 onChange={(e) => handlechange(e)}
                 required
                 errorMessage={Validation[0].VendorManagerPhoneNumber}
               ></TextField>
             </div>
           </div>
-          <div style={formRowStyles}>
-            
-            </div>
+          <div style={formRowStyles}></div>
           <div style={formRowStyles}>
             <div style={formColStyles}>
-              <Text variant={"xLarge"} className={"txtClassHead"} style={{marginTop:"0.5rem"}}>
+              <Text
+                variant={'xLarge'}
+                className={'txtClassHead'}
+                style={{ marginTop: '0.5rem' }}
+              >
                 Shipping Details:
               </Text>
             </div>
@@ -411,7 +412,7 @@ function RequestNewQuoteAdmin(
               <TextField
                 label="Shipping Cont Name"
                 id="txtShippingCountName"
-                name={"ShippingCountName"}
+                name={'ShippingCountName'}
                 onChange={(e) => handlechange(e)}
                 required
                 errorMessage={Validation[0].ShippingCountName}
@@ -424,7 +425,7 @@ function RequestNewQuoteAdmin(
                 autoAdjustHeight
                 label="Shipping Address"
                 id="txtShippingAddress"
-                name={"ShippingAddress"}
+                name={'ShippingAddress'}
                 onChange={(e) => handlechange(e)}
                 required
                 errorMessage={Validation[0].ShippingAddress}
@@ -437,7 +438,7 @@ function RequestNewQuoteAdmin(
                 autoAdjustHeight
                 label="Additional Information"
                 id="txtAdditionalInformation"
-                name={"AdditionalInformation"}
+                name={'AdditionalInformation'}
                 onChange={(e) => handlechange(e)}
                 required
                 errorMessage={Validation[0].AdditionalInformation}
@@ -450,19 +451,21 @@ function RequestNewQuoteAdmin(
                 autoAdjustHeight
                 label="Description"
                 id="txtDescription"
-                name={"Description"}
+                name={'Description'}
                 onChange={(e) => handlechange(e)}
                 required
                 errorMessage={Validation[0].Description}
               ></TextField>
             </div>
           </div>
-          <div style={formRowStyles}>
-          </div>
+          <div style={formRowStyles}></div>
           <Separator></Separator>
           <div style={formRowStyles}>
             <div style={formColStyles}>
-              <PeoplesData update={UpdateSelectedUsers} spcontext={props.spcontext}/>
+              <PeoplesData
+                update={UpdateSelectedUsers}
+                spcontext={props.spcontext}
+              />
               {/*<PeoplePicker
                 context={props.context}
                 titleText="Add User"
@@ -483,22 +486,22 @@ function RequestNewQuoteAdmin(
           <Separator></Separator>
           <div
             style={{
-              display: "flex",
-              justifyContent: "flex-end",
-              width: "100%",
+              display: 'flex',
+              justifyContent: 'flex-end',
+              width: '100%',
             }}
           >
             <PrimaryButton
               text="Submit"
               className="txtclassSubmitBtn"
               onClick={mandatoryvalidation}
-              style={{ marginRight: "0.5rem" }}
+              style={{ marginRight: '0.5rem' }}
             />
             <DefaultButton
               text="Cancel"
               onClick={DialogBox}
               className="txtclassCancelBtn"
-              styles={{ root: { marginRight: "0.5rem" } }}
+              styles={{ root: { marginRight: '0.5rem' } }}
             />
           </div>
           <Dialog hidden={Hidedialog} dialogContentProps={dialogContentProps}>
@@ -509,86 +512,86 @@ function RequestNewQuoteAdmin(
         </div>
       </div>
     </div>
-  );
-
+  )
+  function isValidEmail(email) {
+    return /\S+@\S+\.\S+/.test(email)
+  }
   function handlechange(e): void {
-    var name: string = e.target.attributes.name.value;
-    var value: string = e.target.value;
-    if (value) {
-      Validation[0][name] = "";
-      Submitvalues[0][name] = value;
+    var name: string = e.target.attributes.name.value
+    var value: string = e.target.value
+    if (value && !isValidEmail(e.target.value)) {
+      //if (value) {
+      Validation[0][name] = ''
+      Submitvalues[0][name] = value
     } else {
-      Submitvalues[0][name] = "";
+      Submitvalues[0][name] = ''
     }
-
-    setSubmitvalues([...Submitvalues]);
-    setValidation([...Validation]);
+    setMessage(e.target.value)
+    setSubmitvalues([...Submitvalues])
+    setValidation([...Validation])
   }
 
-  function UpdateSelectedUsers(item)
-  {
-    console.log("Called parent function");
-    var selctedppls=[];
-    item.forEach(async element => {
-      await selctedppls.push(element.ID);
-    });
-    setSelectedpeoples(selctedppls);
+  function UpdateSelectedUsers(item) {
+    console.log('Called parent function')
+    var selctedppls = []
+    item.forEach(async (element) => {
+      await selctedppls.push(element.ID)
+    })
+    setSelectedpeoples(selctedppls)
   }
 
   /*----------------------------------------mandatoryvalidation--------------------------------------*/
   function mandatoryvalidation(): void {
-    var isAllFieldsFilled: boolean = true;
+    var isAllFieldsFilled: boolean = true
 
     if (!Submitvalues[0].DeviceCount) {
-      Validation[0].DeviceCount = "Please Enter DeviceCount";
-      isAllFieldsFilled = false;
+      Validation[0].DeviceCount = 'Please Enter DeviceCount'
+      isAllFieldsFilled = false
     } else if (!Submitvalues[0].PointCount) {
-      Validation[0].PointCount = "Please Enter PointCount";
-      isAllFieldsFilled = false;
+      Validation[0].PointCount = 'Please Enter PointCount'
+      isAllFieldsFilled = false
     } else if (!Submitvalues[0].Drivers) {
-      Validation[0].Drivers = "Please Enter Drivers";
-      isAllFieldsFilled = false;
+      Validation[0].Drivers = 'Please Enter Drivers'
+      isAllFieldsFilled = false
     } else if (!Submitvalues[0].BEName) {
-      Validation[0].BEName = "Please Enter site name";
-      isAllFieldsFilled = false;
+      Validation[0].BEName = 'Please Enter site name'
+      isAllFieldsFilled = false
     } else if (!Submitvalues[0].BENumber) {
-      Validation[0].BENumber = "Please Enter BENumber";
-      isAllFieldsFilled = false;
+      Validation[0].BENumber = 'Please Enter BENumber'
+      isAllFieldsFilled = false
     } else if (!Submitvalues[0].SpecialConsiderations) {
-      Validation[0].SpecialConsiderations =
-        "Please Enter SpecialConsiderations";
-      isAllFieldsFilled = false;
+      Validation[0].SpecialConsiderations = 'Please Enter SpecialConsiderations'
+      isAllFieldsFilled = false
     } else if (!Submitvalues[0].ManagerName) {
-      Validation[0].ManagerName = "Please Enter Name";
-      isAllFieldsFilled = false;
+      Validation[0].ManagerName = 'Please Enter Name'
+      isAllFieldsFilled = false
     } else if (!Submitvalues[0].ManagerEmail) {
-      Validation[0].ManagerEmail = "Please Enter Email";
-      isAllFieldsFilled = false;
+      Validation[0].ManagerEmail = 'Please Enter Email'
+      isAllFieldsFilled = false
     } else if (!Submitvalues[0].ManagerPhoneNumber) {
-      Validation[0].ManagerPhoneNumber = "Please Enter PhoneNumber";
-      isAllFieldsFilled = false;
+      Validation[0].ManagerPhoneNumber = 'Please Enter PhoneNumber'
+      isAllFieldsFilled = false
     } else if (!Submitvalues[0].VendorManagerName) {
-      Validation[0].VendorManagerName = "Please Enter Name";
-      isAllFieldsFilled = false;
+      Validation[0].VendorManagerName = 'Please Enter Name'
+      isAllFieldsFilled = false
     } else if (!Submitvalues[0].VendorManagerEmail) {
-      Validation[0].VendorManagerEmail = "Please Enter Email";
-      isAllFieldsFilled = false;
+      Validation[0].VendorManagerEmail = 'Please Enter Email'
+      isAllFieldsFilled = false
     } else if (!Submitvalues[0].VendorManagerPhoneNumber) {
-      Validation[0].VendorManagerPhoneNumber = "Please Enter PhoneNumber";
-      isAllFieldsFilled = false;
+      Validation[0].VendorManagerPhoneNumber = 'Please Enter PhoneNumber'
+      isAllFieldsFilled = false
     } else if (!Submitvalues[0].ShippingCountName) {
-      Validation[0].ShippingCountName = "Please Enter ShippingCountName";
-      isAllFieldsFilled = false;
+      Validation[0].ShippingCountName = 'Please Enter ShippingCountName'
+      isAllFieldsFilled = false
     } else if (!Submitvalues[0].ShippingAddress) {
-      Validation[0].ShippingAddress = "Please Enter ShippingAddress";
-      isAllFieldsFilled = false;
+      Validation[0].ShippingAddress = 'Please Enter ShippingAddress'
+      isAllFieldsFilled = false
     } else if (!Submitvalues[0].AdditionalInformation) {
-      Validation[0].AdditionalInformation =
-        "Please Enter AdditionalInformation";
-      isAllFieldsFilled = false;
+      Validation[0].AdditionalInformation = 'Please Enter AdditionalInformation'
+      isAllFieldsFilled = false
     } else if (!Submitvalues[0].Description) {
-      Validation[0].Description = "Please Enter Description";
-      isAllFieldsFilled = false;
+      Validation[0].Description = 'Please Enter Description'
+      isAllFieldsFilled = false
     }
     /*else if(getSelectedUsers.length==0)
     {
@@ -596,14 +599,14 @@ function RequestNewQuoteAdmin(
       isAllFieldsFilled=false;
     }*/
 
-    setValidation([...Validation]);
+    setValidation([...Validation])
 
-    Submit(isAllFieldsFilled);
+    Submit(isAllFieldsFilled)
   }
 
   async function Submit(allvaluesfilled): Promise<void> {
     if (allvaluesfilled) {
-      await setColumn(true);
+      await setColumn(true)
       var requestdata: formvalues = {
         DeviceCount: Submitvalues[0].DeviceCount,
         PointCount: Submitvalues[0].PointCount,
@@ -625,22 +628,22 @@ function RequestNewQuoteAdmin(
         Category: Category.toString(),
         //UserDetailsId: { results: getSelectedUsers },
         UserDetailsId: { results: Selectedpeoples },
-      };
+      }
       await props.spcontext.lists
-        .getByTitle("WFQuoteRequestList")
+        .getByTitle('WFQuoteRequestList')
         .items.add(requestdata)
         .then(async function (data): Promise<void> {
-          console.log(data);
-          setColumn(false);
-          setHidedialog(false);
+          console.log(data)
+          setColumn(false)
+          setHidedialog(false)
         })
         .catch(function (error): void {
-          alert(error);
-        });
+          alert(error)
+        })
     }
   }
   function DialogBox(): void {
-    location.href = siteURL + "/SitePages/WFRequestDashboard.aspx";
+    location.href = siteURL + '/SitePages/WFRequestDashboard.aspx'
 
     /*var element = document.getElementById('adminFormRequest');
     var opt = {
@@ -669,29 +672,29 @@ function RequestNewQuoteAdmin(
   }
 
   function autoIncrementCustomId(lastRecordId) {
-    let increasedNum = Number(lastRecordId.replace("WF-", "")) + 1;
-    let kmsStr = lastRecordId.substr(0, 3);
+    let increasedNum = Number(lastRecordId.replace('WF-', '')) + 1
+    let kmsStr = lastRecordId.substr(0, 3)
 
-    kmsStr = kmsStr + increasedNum.toString();
-    console.log(kmsStr);
-    NextOrderID = kmsStr;
+    kmsStr = kmsStr + increasedNum.toString()
+    console.log(kmsStr)
+    NextOrderID = kmsStr
   }
 
   async function getLastID() {
     await props.spcontext.lists
-      .getByTitle("WFQuoteRequestList")
-      .items.select("ID", "OrderNo")
+      .getByTitle('WFQuoteRequestList')
+      .items.select('ID', 'OrderNo')
       .top(1)
-      .orderBy("ID", false)
+      .orderBy('ID', false)
       .get()
       .then(function (data) {
         if (data.length > 0) {
-          autoIncrementCustomId(data[0].OrderNo);
+          autoIncrementCustomId(data[0].OrderNo)
         } else {
-          autoIncrementCustomId("WF-0");
+          autoIncrementCustomId('WF-0')
         }
       })
-      .catch(function (error) {});
+      .catch(function (error) {})
   }
 }
-export { RequestNewQuoteAdmin };
+export { RequestNewQuoteAdmin }
