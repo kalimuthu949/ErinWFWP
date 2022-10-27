@@ -65,7 +65,7 @@ interface formvalues {
   Description: string
   UserDetailsId: string | Number[] | any
 }
-const [message, setMessage] = useState('')
+//const [message, setMessage] = useState('')
 const formRowStyles = { display: 'flex', width: '100%', marginTop: '0.5rem' }
 const formColStyles = { width: '23%', padding: '0rem 1rem' }
 function RequestNewQuoteAdmin(
@@ -519,14 +519,14 @@ function RequestNewQuoteAdmin(
   function handlechange(e): void {
     var name: string = e.target.attributes.name.value
     var value: string = e.target.value
-    if (value && !isValidEmail(e.target.value)) {
-      //if (value) {
+    //if (value && !isValidEmail(e.target.value)) {
+    if (value) {
       Validation[0][name] = ''
       Submitvalues[0][name] = value
     } else {
       Submitvalues[0][name] = ''
     }
-    setMessage(e.target.value)
+    //setMessage(e.target.value)
     setSubmitvalues([...Submitvalues])
     setValidation([...Validation])
   }

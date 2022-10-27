@@ -355,8 +355,8 @@ export default function DashBoardAdmin(
 
   const sbWidth = 6
   const sbHeight = 6
-  const sbBg = 'pink'
-  const sbThumbBg = 'red'
+  const sbBg = 'gray'
+  const sbThumbBg = 'black'
 
   useEffect((): void => {
     loadTheme(wellsFargoTheme)
@@ -434,36 +434,36 @@ export default function DashBoardAdmin(
               paginate(page)
             }}
           />
-          {/* <DetailsList
+          <DetailsList
             columns={_columns}
             items={rows}
             selectionMode={SelectionMode.none}
             setKey="none"
             layoutMode={DetailsListLayoutMode.justified}
             //onRenderItemColumn={_renderItemColumn}
-          /> */}
-          <ScrollablePane
+          />
+          {/* <ScrollablePane
             scrollbarVisibility={ScrollbarVisibility.auto}
-            styles={{
-              root: {
-                selectors: {
-                  '.ms-ScrollablePane--contentContainer': {
-                    scrollbarWidth: sbWidth,
-                    scrollbarColor: `${sbThumbBg} ${sbBg}`,
-                  },
-                  '.ms-ScrollablePane--contentContainer::-webkit-scrollbar': {
-                    width: sbWidth,
-                    height: sbHeight,
-                  },
-                  '.ms-ScrollablePane--contentContainer::-webkit-scrollbar-track': {
-                    background: sbBg,
-                  },
-                  '.ms-ScrollablePane--contentContainer::-webkit-scrollbar-thumb': {
-                    background: sbThumbBg,
-                  },
-                },
-              },
-            }}
+            // styles={{
+            //   root: {
+            //     selectors: {
+            //       '.ms-ScrollablePane--contentContainer': {
+            //         scrollbarWidth: sbWidth,
+            //         scrollbarColor: `${sbThumbBg} ${sbBg}`,
+            //       },
+            //       '.ms-ScrollablePane--contentContainer::-webkit-scrollbar': {
+            //         width: sbWidth,
+            //         height: sbHeight,
+            //       },
+            //       '.ms-ScrollablePane--contentContainer::-webkit-scrollbar-track': {
+            //         background: sbBg,
+            //       },
+            //       '.ms-ScrollablePane--contentContainer::-webkit-scrollbar-thumb': {
+            //         background: sbThumbBg,
+            //       },
+            //     },
+            //   },
+            // }}
           >
             <DetailsList
               columns={_columns}
@@ -498,7 +498,7 @@ export default function DashBoardAdmin(
                 )
               }}
             />
-          </ScrollablePane>
+          </ScrollablePane> */}
         </div>
       ) : (
         <div style={{ fontWeight: 'bold', textAlign: 'center' }}>
@@ -660,17 +660,25 @@ export default function DashBoardAdmin(
         //   }
 
         for (var k = 0; k < data.length; k++) {
-          var userBelongsToNWFCompany = allUsers.find(
-            (x) => x.ID === data[k].Author.ID,
-          ).ID
+          // var userBelongsToNWFCompany = allUsers.find(
+          //   (x) => x.ID === data[k].Author.ID,
+          // ).ID
           var isUsersSharedForthisdata = false
           if (data[k].SharedWith) {
-            isUsersSharedForthisdata = data[k].SharedWith.find(
-              (x) => x.EMail === UserEmail,
-            ).ID
+            try {
+              isUsersSharedForthisdata = data[k].SharedWith.find(
+                (x) => x.EMail === UserEmail,
+              ).ID
+            } catch (e) {
+              console.log(e)
+            }
           }
-          //if (isAdmin || data[k].Author.ID == loggedInUserID) {
-          if (userBelongsToNWFCompany || isUsersSharedForthisdata != false) {
+          if (
+            isAdmin ||
+            data[k].Author.ID == loggedInUserID ||
+            isUsersSharedForthisdata != false
+          ) {
+            //if (userBelongsToNWFCompany || isUsersSharedForthisdata != false) {
             var newitem: IColumns = {
               Title: data[k].Title,
               ID: data[k].ID,
