@@ -497,18 +497,19 @@ function RequestNewQuoteAdmin(
               width: '100%',
             }}
           >
+               <DefaultButton
+              text="Cancel"
+              onClick={DialogBox}
+              className="txtclassCancelBtn"
+              styles={{ root: { marginRight: '0.5rem' } }}
+            />
             <PrimaryButton
               text="Submit"
               className="txtclassSubmitBtn"
               onClick={mandatoryvalidation}
               style={{ marginRight: '0.5rem' }}
             />
-            <DefaultButton
-              text="Cancel"
-              onClick={DialogBox}
-              className="txtclassCancelBtn"
-              styles={{ root: { marginRight: '0.5rem' } }}
-            />
+         
           </div>
           <Dialog hidden={Hidedialog} dialogContentProps={dialogContentProps}>
             <DialogFooter>
