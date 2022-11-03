@@ -303,6 +303,7 @@ function RequestNewQuoteAdmin(
               <TextField
                 multiline
                 rows={2}
+                resizable={false}
                 autoAdjustHeight
                 label="Special Considerations"
                 id="txtSpecialConsiderations"
@@ -348,6 +349,7 @@ function RequestNewQuoteAdmin(
                 name={"ManagerPhoneNumber"}
                 onChange={(e) => handlechange(e)}
                 required
+                type="number"
                 errorMessage={Validation[0].ManagerPhoneNumber}
               ></TextField>
             </div>
@@ -391,6 +393,7 @@ function RequestNewQuoteAdmin(
                 name={"VendorManagerPhoneNumber"}
                 onChange={(e) => handlechange(e)}
                 required
+                type="number"
                 errorMessage={Validation[0].VendorManagerPhoneNumber}
               ></TextField>
             </div>
@@ -421,6 +424,7 @@ function RequestNewQuoteAdmin(
               <TextField
                 multiline
                 rows={2}
+                resizable={false}
                 autoAdjustHeight
                 label="Shipping Address"
                 id="txtShippingAddress"
@@ -434,6 +438,7 @@ function RequestNewQuoteAdmin(
               <TextField
                 multiline
                 rows={2}
+                resizable={false}
                 autoAdjustHeight
                 label="Additional Information"
                 id="txtAdditionalInformation"
@@ -447,6 +452,7 @@ function RequestNewQuoteAdmin(
               <TextField
                 multiline
                 rows={2}
+                resizable={false}
                 autoAdjustHeight
                 label="Description"
                 id="txtDescription"
@@ -535,6 +541,11 @@ function RequestNewQuoteAdmin(
     setSelectedpeoples(selctedppls);
   }
 
+  function isEmail(email) {
+    var regex = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+    return regex.test(email);
+  }
+
   /*----------------------------------------mandatoryvalidation--------------------------------------*/
   function mandatoryvalidation(): void {
     var isAllFieldsFilled: boolean = true;
@@ -561,7 +572,7 @@ function RequestNewQuoteAdmin(
     } else if (!Submitvalues[0].ManagerName) {
       Validation[0].ManagerName = "Please Enter Name";
       isAllFieldsFilled = false;
-    } else if (!Submitvalues[0].ManagerEmail) {
+    } else if (!Submitvalues[0].ManagerEmail || !isEmail(Submitvalues[0].ManagerEmail)) {
       Validation[0].ManagerEmail = "Please Enter Email";
       isAllFieldsFilled = false;
     } else if (!Submitvalues[0].ManagerPhoneNumber) {
@@ -570,7 +581,7 @@ function RequestNewQuoteAdmin(
     } else if (!Submitvalues[0].VendorManagerName) {
       Validation[0].VendorManagerName = "Please Enter Name";
       isAllFieldsFilled = false;
-    } else if (!Submitvalues[0].VendorManagerEmail) {
+    } else if (!Submitvalues[0].VendorManagerEmail||!isEmail(Submitvalues[0].VendorManagerEmail)) {
       Validation[0].VendorManagerEmail = "Please Enter Email";
       isAllFieldsFilled = false;
     } else if (!Submitvalues[0].VendorManagerPhoneNumber) {
